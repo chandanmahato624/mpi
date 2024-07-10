@@ -300,5 +300,73 @@ return 0;
 circle
 
 ```javascript
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define N 4
+
+void print_matrix(int mat[N][N]) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            printf("%d ", mat[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main(int argc, char* argv[]) {
+    int rank, size, i, j, k;
+    int a[N][N] = {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 10, 11, 12},
+        {13, 14, 15, 16}
+    };
+    int b[N][N] = {
+        {1, 0, 0, 0},
+        {0, 1, 0, 0},
+        {0, 0, 1, 0},
+        {0, 0, 0, 1}
+    };
+    int c[N][N] = {0};
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    if (N % size != 0) {
+        if (rank == 0) {
+            printf("Matrix size must be divisible by the number of processes.\n");
+        }
+        MPI_Finalize();
+        return -1;
+    }
+
+    int rows_per_process = N / size;
+    int sub_a[rows_per_process][N], sub_c[rows_per_process][N];
+
+    MPI_Scatter(a, rows_per_process * N, MPI_INT, sub_a, rows_per_process * N, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(b, N * N, MPI_INT, 0, MPI_COMM_WORLD);
+
+    for (i = 0; i < rows_per_process; i++) {
+        for (j = 0; j < N; j++) {
+            sub_c[i][j] = 0;
+            for (k = 0; k < N; k++) {
+                sub_c[i][j] += sub_a[i][k] * b[k][j];
+            }
+        }
+    }
+
+    MPI_Gather(sub_c, rows_per_process * N, MPI_INT, c, rows_per_process * N, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        printf("Result matrix:\n");
+        print_matrix(c);
+    }
+
+    MPI_Finalize();
+    return 0;
+}
 
 ```
