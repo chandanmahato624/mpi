@@ -1,6 +1,6 @@
 
 
-####1. WAPP in C/C++ to compute PI by the Monte Carlo method, testing whether points in the unit square are in the unit
+1. WAPP in C/C++ to compute PI by the Monte Carlo method, testing whether points in the unit square are in the unit
 circle
 
 ```javascript
@@ -33,7 +33,7 @@ return 0;
 }
 ```
 
-####1. WAPP in C/C++ to compute the sum of elements in an array using scatter and gather operation using MPI
+2. WAPP in C/C++ to compute the sum of elements in an array using scatter and gather operation using MPI
 for parallel execution.
 
 ```javascript
@@ -64,7 +64,7 @@ return 0;
 ```
 
 
-####1. WAPP in C/C++ to implement parallel linear search using MPI for parallel execution.
+3. WAPP in C/C++ to implement parallel linear search using MPI for parallel execution.
 
 ```javascript
 #include <mpi.h>
@@ -104,7 +104,7 @@ return 0;
 
 
 
-####1WAPP in C/C++ to find the largest value among the elements stored in an array using scatter and gather operation
+4. WAPP in C/C++ to find the largest value among the elements stored in an array using scatter and gather operation
 using MPI for parallel execution.
 
 ```javascript
@@ -137,7 +137,7 @@ return
 ```
 
 
-####1.WAPP in C/C++ using MPI to compute the sum of all odd numbers in an array using broadcast.
+5. .WAPP in C/C++ using MPI to compute the sum of all odd numbers in an array using broadcast.
 
 ```javascript
 #include <mpi.h>
@@ -168,7 +168,7 @@ return 0;
 }
 ```
 
-####1.1.Mat Add
+6. Mat Add
 
 ```javascript
 #include <mpi.h>
@@ -233,7 +233,7 @@ return 0;
 ```
 
 
-####1. Mat sum
+7. Mat sum
 
 ```javascript
 #include <mpi.h>
