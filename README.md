@@ -6,31 +6,49 @@ circle
 ```javascript
 #include <mpi.h>
 #include <stdio.h>
+#incl#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#define MASTER 0
-#define NUM_POINTS 1000000
-int main(int argc, char* argv[]) {
-int rank, size, i, count = 0, total_count = 0;
-double x, y, z, pi;
+#include <mpi.h>
+void bubble_sort(int arr[], int n) {
+int i, j;
+for (i = 0; i < n-1; i++) {
+for (j = 0; j < n-i-1; j++) {
+if (arr[j] > arr[j+1]) {
+int temp = arr[j];
+arr[j] = arr[j+1];
+arr[j+1] = temp; }}}}
+int main(int argc, char *argv[]) {
+int pid, np;
+int *arr = NULL;
+int n = 10;
+int i;
 MPI_Init(&argc, &argv);
-MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-MPI_Comm_size(MPI_COMM_WORLD, &size);
-srand(time(NULL) + rank);
-for (i = 0; i < NUM_POINTS / size; i++) {
-x = (double)rand() / RAND_MAX;
-y = (double)rand() / RAND_MAX;
-z = x * x + y * y;
-if (z <= 1) count++;
-}
-MPI_Reduce(&count, &total_count, 1, MPI_INT, MPI_SUM, MASTER, MPI_COMM_WORLD);
-if (rank == MASTER) {
-pi = ((double)total_count / NUM_POINTS) * 4.0;
-printf("Computed PI = %f\n", pi);
-}
+MPI_Comm_rank(MPI_COMM_WORLD, &pid);
+MPI_Comm_size(MPI_COMM_WORLD, &np);
+if (pid == 0) {
+arr = (int *)malloc(n * sizeof(int));
+for (i = 0; i < n; i++) {
+arr[i] = rand() % 100; }
+printf("Original array:\n");
+for (i = 0; i < n; i++) {
+printf("%d ", arr[i]);}
+printf("\n"); }
+MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+int local_n = n / np;
+int *local_arr = (int *)malloc(local_n * sizeof(int));
+MPI_Scatter(arr, local_n, MPI_INT, local_arr, local_n, MPI_INT, 0, 
+MPI_COMM_WORLD);
+bubble_sort(local_arr, local_n);
+MPI_Gather(local_arr, local_n, MPI_INT, arr, local_n, MPI_INT, 0, 
+MPI_COMM_WORLD);
+if (pid == 0) {
+bubble_sort(arr, n);
+printf("Sorted array:\n");
+for (i = 0; i < n; i++) {
+printf("%d ", arr[i]);}
+printf("\n");}
 MPI_Finalize();
-return 0;
-}
+return 0;}
 ```
 
 2. WAPP in C/C++ to compute the sum of elements in an array using scatter and gather operation using MPI
