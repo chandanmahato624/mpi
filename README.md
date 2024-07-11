@@ -55,30 +55,7 @@ return 0;}
 for parallel execution.
 
 ```javascript
-#include <mpi.h>
-#include <stdio.h>
-#define N 16
-int main(int argc, char* argv[]) {
-int rank, size, i;
-int a[N] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-int sub_sum = 0, total_sum = 0;
-MPI_Init(&argc, &argv);
-MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-MPI_Comm_size(MPI_COMM_WORLD, &size);
-int elements_per_process = N / size;
-int sub_a[elements_per_process];
-MPI_Scatter(a, elements_per_process, MPI_INT, sub_a, elements_per_process, MPI_INT, 0,
-MPI_COMM_WORLD);
-for (i = 0; i < elements_per_process; i++) {
-sub_sum += sub_a[i];
-}
-MPI_Reduce(&sub_sum, &total_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-if (rank == 0) {
-printf("Total sum = %d\n", total_sum);
-}
-MPI_Finalize();
-return 0;
-}
+https://colab.research.google.com/drive/1Bjb5zbwpRR7pEJT_NE70Q5sC2hAcvBNg?usp=sharing#scrollTo=E22r8nUtyExO
 ```
 
 
